@@ -6,7 +6,6 @@ import Description from './Description/Description';
 import Notification from './Notification/Notification';
 
 function App() {
-
   const [ feedbackStates, setFeedbackStates ] = useState(() => {
     const savedFeedback = window.localStorage.getItem("feedback-states");
     if (savedFeedback !== null) {
@@ -19,19 +18,21 @@ function App() {
     }
   });
 
+  const [resetClicked, setResetClicked] = useState(false);
+
   const totalFeedback = feedbackStates.good + feedbackStates.neutral + feedbackStates.bad;
   const positiveFeedback = totalFeedback > 0 ? Math.round(((feedbackStates.good + feedbackStates.neutral) / totalFeedback) * 100) : 0;
 
   useEffect(() => {
-      window.localStorage.setItem("feedback-states", JSON.stringify(feedbackStates));
-    }, [feedbackStates]
-    )
+    window.localStorage.setItem("feedback-states", JSON.stringify(feedbackStates));
+  }, [feedbackStates]);
 
   const updateFeedback = feedbackType => {
-      setFeedbackStates({
-        ...feedbackStates,
-        [feedbackType]: feedbackStates[feedbackType] + 1,
-      });
+    setFeedbackStates({
+      ...feedbackStates,
+      [feedbackType]: feedbackStates[feedbackType] + 1,
+    });
+    setResetClicked(false); 
   }
 
   const resetFeedback = () => {
@@ -40,20 +41,21 @@ function App() {
       neutral: 0,
       bad: 0,
     });
+    setResetClicked(true); 
   }
 
   return (
     <>
       <Description />
-      <Options updateFeedback={updateFeedback} resetFeedback={resetFeedback} totalFeedback = {totalFeedback} />
+      <Options updateFeedback={updateFeedback} resetFeedback={resetFeedback} totalFeedback={totalFeedback} resetClicked={resetClicked} />
       {totalFeedback > 0 ? (
-        <Feedback states={feedbackStates} totalFeedback = {totalFeedback} positiveFeedback = {positiveFeedback} />
+        <Feedback states={feedbackStates} totalFeedback={totalFeedback} positiveFeedback={positiveFeedback} />
       ) : (
         <Notification />
       )}
     </>
   )
-
 }
 
-export default App
+export default App;
+
