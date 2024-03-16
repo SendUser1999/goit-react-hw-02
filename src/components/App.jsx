@@ -18,9 +18,6 @@ function App() {
     }
   });
 
-  const [resetClicked, setResetClicked] = useState(false);
-  const [feedbackClicked, setFeedbackClicked] = useState(false); 
-
   const totalFeedback = feedbackStates.good + feedbackStates.neutral + feedbackStates.bad;
   const positiveFeedback = totalFeedback > 0 ? Math.round(((feedbackStates.good + feedbackStates.neutral) / totalFeedback) * 100) : 0;
 
@@ -33,8 +30,6 @@ function App() {
       ...feedbackStates,
       [feedbackType]: feedbackStates[feedbackType] + 1,
     });
-    setResetClicked(false);
-    setFeedbackClicked(true); 
   }
 
   const resetFeedback = () => {
@@ -43,13 +38,12 @@ function App() {
       neutral: 0,
       bad: 0,
     });
-    setResetClicked(true);
   }
 
   return (
     <>
       <Description />
-      <Options updateFeedback={updateFeedback} resetFeedback={resetFeedback} totalFeedback={totalFeedback} resetClicked={resetClicked} feedbackClicked={feedbackClicked} />
+      <Options updateFeedback={updateFeedback} resetFeedback={resetFeedback} totalFeedback={totalFeedback} />
       {totalFeedback > 0 ? (
         <Feedback states={feedbackStates} totalFeedback={totalFeedback} positiveFeedback={positiveFeedback} />
       ) : (
